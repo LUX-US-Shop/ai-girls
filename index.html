@@ -257,7 +257,7 @@
 
   <!-- LEFT: SexyFans -->
   <a href="https://t.datsk11.com/403634/9144/37522?aff_sub=dating_acc3&bo=2753,2754,2755,2756&source=pinterest&aff_sub5=SF_006OG000004lmDN"
-     class="half left" id="leftHalf" onclick="trackClick('dating-choice','SexyFans','acc3','dating')">
+     class="half left" id="leftHalf" onclick="trackClick('dating','SexyFans','acc3','dating')">
     <img class="bg" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdC
 IFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAA
 AADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlk
@@ -3590,7 +3590,7 @@ dJ6mqTkh5SU/KfElf//Z" alt="SexyFans">
 
   <!-- RIGHT: TransDate -->
   <a href="https://t.datsk11.com/403634/9144/37522?aff_sub=dating_acc4&bo=2753,2754,2755,2756&source=pinterest&aff_sub5=SF_006OG000004lmDN"
-     class="half right" id="rightHalf" onclick="trackClick('dating-choice','TransDate','acc4','dating')">
+     class="half right" id="rightHalf" onclick="trackClick('dating','TransDate','acc4','dating')">
     <img class="bg" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdC
 IFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAA
 AADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlk
@@ -6555,7 +6555,7 @@ QTS4lRaNuUE0utQVGyf/2Q==" alt="TransDate">
 
 <script>
 // ===== GOOGLE SHEETS ANALYTICS =====
-var GS_URL = 'https://script.google.com/macros/s/AKfycbxUBpyJjbuJYRhAku1ixTIVLxOSaML-uZmlYDdnECRDQRYGTbXFWQ_K3UC26n-Wjca-/exec';
+var GS_URL = 'https://script.google.com/macros/s/AKfycbzdeXJryOigbdw927k4uMu5u2TMb5x2543BjKkmiBSiv_5XCxnTC3LlNdG7wT59_89U/exec';
 function trackClick(landing, offer, acc, offerId) {
   try {
     fetch(GS_URL, {
@@ -6566,31 +6566,6 @@ function trackClick(landing, offer, acc, offerId) {
   } catch(e) {}
 }
 // ===== END ANALYTICS =====
-</script>
-
-<script>
-var GS_URL = 'https://script.google.com/macros/s/AKfycbxUBpyJjbuJYRhAku1ixTIVLxOSaML-uZmlYDdnECRDQRYGTbXFWQ_K3UC26n-Wjca-/exec';
-function trackClick(landing, offer, acc, offerId) {
-  try {
-    var device = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
-    var ref = document.referrer || '';
-    fetch(GS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        landing: landing,
-        offer: offer,
-        acc: acc,
-        offer_id: offerId,
-        utm_source: 'pinterest',
-        device: device,
-        ref: ref,
-        ts: new Date().toISOString()
-      })
-    });
-  } catch(e) {}
-}
 </script>
 </body>
 </html>
