@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Meet Someone Special 2026</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,6 +39,7 @@
     flex: 1;
     transition: flex 0.55s cubic-bezier(0.77,0,0.18,1);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
   .split-screen:hover .half.left:hover  { flex: 1.65; }
   .split-screen:hover .half.right:hover { flex: 1.65; }
@@ -50,6 +51,7 @@
     width: 100%; height: 100%; object-fit: cover;
     transition: transform 0.55s ease, filter 0.45s ease;
     filter: brightness(0.45) saturate(0.8);
+    pointer-events: none;
   }
   .half.left  img.bg, .half.left  video.bg { object-position: center 10%; }
   .half.right img.bg, .half.right video.bg { object-position: center 10%; }
@@ -58,6 +60,7 @@
   .half-tint {
     position: absolute; inset: 0; z-index: 1;
     transition: opacity 0.45s ease; opacity: 0.35;
+    pointer-events: none;
   }
   .half.left  .half-tint { background: linear-gradient(160deg, rgba(210,140,100,0.5) 0%, transparent 55%); }
   .half.right .half-tint { background: linear-gradient(200deg, rgba(140,60,180,0.6) 0%, transparent 55%); }
@@ -65,7 +68,7 @@
 
   .half-gradient {
     position: absolute; bottom: 0; left: 0; right: 0;
-    height: 75%; z-index: 2;
+    height: 75%; z-index: 2; pointer-events: none;
   }
   .half.left  .half-gradient { background: linear-gradient(transparent, rgba(8,5,15,0.98)); }
   .half.right .half-gradient { background: linear-gradient(transparent, rgba(8,5,15,0.98)); }
@@ -79,6 +82,7 @@
     transform: translateY(8px);
     transition: transform 0.45s ease, opacity 0.45s ease;
     opacity: 0.75;
+    pointer-events: none;
   }
   .half:hover .half-content { transform: translateY(0); opacity: 1; }
 
@@ -109,7 +113,6 @@
     margin-bottom: 14px; line-height: 1.55;
   }
 
-  /* Online counter */
   .half-online {
     display: flex; align-items: center; gap: 7px;
     font-size: clamp(11px,2vw,13px);
@@ -141,7 +144,9 @@
     padding: clamp(13px,2.5vw,17px) clamp(28px,5.5vw,44px);
     border-radius: 50px; font-size: clamp(14px,2.8vw,18px);
     font-weight: 800; color: white; border: none; cursor: pointer;
-    pointer-events: none;
+    pointer-events: auto;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     transform: scale(0.88); transition: transform 0.35s ease;
     position: relative; overflow: hidden; letter-spacing: 0.5px;
   }
@@ -162,7 +167,6 @@
   }
   @keyframes sweep { 0% { left: -100%; } 50%,100% { left: 100%; } }
 
-  /* Free badge on button */
   .btn-free {
     font-size: clamp(9px,1.6vw,11px);
     opacity: 0.75; font-weight: 600;
@@ -238,7 +242,7 @@
 
   @media (hover: none) {
     .half img.bg, .half video.bg { filter: brightness(0.6) saturate(1.1); }
-    .half-content { opacity: 1; transform: none; }
+    .half-content { opacity: 1; transform: none; pointer-events: auto; }
     .half-btn { transform: scale(1); }
   }
 </style>
@@ -357,31 +361,51 @@
 
   const left  = document.getElementById("leftHalf");
   const right = document.getElementById("rightHalf");
-  let lastTouched = null;
+  const splitScreen = document.getElementById("splitScreen");
+  let activeHalf = null;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  splitScreen.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  splitScreen.addEventListener("touchmove", (e) => {
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy)) {
+      e.preventDefault();
+      const expandRight = dx < 0;
+      left.style.flex  = expandRight ? "0.55" : "1.65";
+      right.style.flex = expandRight ? "1.65" : "0.55";
+      activeHalf = expandRight ? right : left;
+    }
+  }, { passive: false });
+
   [left, right].forEach(el => {
     el.addEventListener("touchstart", (e) => {
-      if (lastTouched !== el) {
-        e.preventDefault(); lastTouched = el;
+      if (activeHalf !== el) {
+        e.preventDefault();
+        activeHalf = el;
         left.style.flex  = el === left  ? "1.65" : "0.55";
         right.style.flex = el === right ? "1.65" : "0.55";
       }
     }, { passive: false });
   });
-</script>
 
-<script>
-// ===== GOOGLE SHEETS ANALYTICS =====
-var GS_URL = 'https://script.google.com/macros/s/AKfycbzdeXJryOigbdw927k4uMu5u2TMb5x2543BjKkmiBSiv_5XCxnTC3LlNdG7wT59_89U/exec';
-function trackClick(landing, offer, acc, offerId) {
-  try {
-    fetch(GS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({landing:landing,offer:offer,acc:acc,offer_id:offerId,utm_source:'pinterest',ts:new Date().toISOString()})
-    });
-  } catch(e) {}
-}
-// ===== END ANALYTICS =====
+  // ===== GOOGLE SHEETS ANALYTICS =====
+  var GS_URL = 'https://script.google.com/macros/s/AKfycbzdeXJryOigbdw927k4uMu5u2TMb5x2543BjKkmiBSiv_5XCxnTC3LlNdG7wT59_89U/exec';
+  function trackClick(landing, offer, acc, offerId) {
+    try {
+      fetch(GS_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({landing,offer,acc,offer_id:offerId,utm_source:'pinterest',ts:new Date().toISOString()})
+      });
+    } catch(e) {}
+  }
 </script>
 </body>
 </html>
